@@ -27,7 +27,7 @@
 # customize defaults #
 ######################
 
-$expect_timeout = 9;
+$expect_timeout = 15;
 
 ######################
 
@@ -44,7 +44,7 @@ GetOptions(
 ) || usage(2);
 
 $DEBUG && $VERBOSE++;
-$KERNEL_DIR ||= '.' if -f '.config';
+$KERNEL_DIR ||= '.';
 $KERNEL_DIR ||= '/usr/src/linux';
 
 check_path( qw( make perl ) );
@@ -85,12 +85,12 @@ foreach $snippet (@SNIPPETS) {
 # append some default expect match/action pairs (order matters)...
 #
 push(@match_patterns, [
-  qr{ \([A-Za-z0-9_]+?\) \[[?/YNM]+\] (.NEW..)?$}i,  # Yes/No/Module (that we do not care about)...
+  qr{ \([A-Za-z0-9_\-\.]+?\) \[[?/YNM]+\] (.NEW..)?$}i,  # Yes/No/Module (that we do not care about)...
     sub { my $self = shift;
              $self->send("\n");
           exp_continue } ] );
 push(@match_patterns, [
-  qr{ \([A-Za-z0-9_]+?\) \[.*?\] (.NEW..)?$}i,       # a string value (that we do not care about)...
+  qr{ \([A-Za-z0-9_\-\.]+?\) \[.*?\] (.NEW..)?$}i,       # a string value (that we do not care about)...
     sub { my $self = shift;
              $self->send("\n");
           exp_continue } ] );
@@ -182,7 +182,7 @@ sub get_kernel_config_session {
 
   die("++error: expect session could not be established")
     unless $expect_session->expect($expect_timeout,
-      [ qr/\n\* Linux.*?Kernel Configuration/ ]);
+      [ qr/\n\* OpenWrt.*?Configuration/ ]);
 
   return $expect_session;
 }
