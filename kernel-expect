@@ -85,7 +85,7 @@ foreach $snippet (@SNIPPETS) {
 # append some default expect match/action pairs (order matters)...
 #
 push(@match_patterns, [
-  qr{ \([A-Za-z0-9_\-\.]+?\) \[[?/YNM]+\] (.NEW..)?$}i,  # Yes/No/Module (that we do not care about)...
+  qr{ \[[?/YNM]+\] (.NEW..)?$}i,  # Yes/No/Module (that we do not care about)...
     sub { my $self = shift;
              $self->send("\n");
           exp_continue } ] );
@@ -182,7 +182,7 @@ sub get_kernel_config_session {
 
   die("++error: expect session could not be established")
     unless $expect_session->expect($expect_timeout,
-      [ qr/\n\* OpenWrt.*?Configuration/ ]);
+      [ qr/\n\* .*?Configuration/ ]);
 
   return $expect_session;
 }
@@ -275,4 +275,3 @@ Sample config snippet file:
 EOF
 exit 1;
 }
-
